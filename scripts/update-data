@@ -1,0 +1,27 @@
+#!/bin/bash
+
+python ./scripts/to-json.py || exit 1
+
+wrap() {
+    echo "/**
+ * @type {{
+ *  menus: {
+ *    title: string,
+ *    sections: {
+ *       title: string
+ *       description: string
+ *       image: string
+ *       items: {
+ *          title: string
+ *          description: string
+ *          price: number
+ *       }[]
+ *    }[]
+ * }[]
+ * }}
+ */
+export const ${1}_data = ${2};"
+}
+
+wrap "it" "$(cat ./scripts/.output/it-menu.json)" > ./src/js/data/it.js
+wrap "en" "$(cat ./scripts/.output/en-menu.json)" > ./src/js/data/en.js
